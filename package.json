@@ -1,0 +1,39 @@
+{
+  "name": "@soney/md-to-pdf",
+  "version": "1.0.0",
+  "description": "Convert Markdown worksheets to styled PDFs with answer boxes",
+  "scripts": {
+    "example": "node src/cli.js examples/worksheet.md && node src/cli.js examples/worksheet.md --key",
+    "vscode:install": "bash scripts/install-vscode-extension.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/soney/md-to-pdf.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/soney/md-to-pdf/issues"
+  },
+  "homepage": "https://github.com/soney/md-to-pdf#readme",
+  "bin": {
+    "md2pdf": "./src/cli.js"
+  },
+  "dependencies": {
+    "@fontsource/alegreya": "^5.3.0",
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "@vscode/markdown-it-katex": "^1.1.2",
+    "gray-matter": "^4.0.3",
+    "highlight.js": "^11.12.0",
+    "katex": "^0.18.5",
+    "markdown-it": "^15.0.1",
+    "markdown-it-container": "^4.0.0",
+    "puppeteer": "^25.9.0"
+  },
+  "allowScripts": {
+    "puppeteer@25.9.0": true
+  }
+}

@@ -1,0 +1,117 @@
+/* spot-web styling for VS Code's built-in markdown preview. Loads after
+   VS Code's own preview styles, so these rules win where they overlap.
+   Font size and background are left to the theme and the user's preview
+   settings; this restyles type, rules, and the answer boxes.
+
+   Fonts are copied into ./fonts by scripts/install-vscode-extension.sh. */
+@font-face {
+    font-family: 'Alegreya';
+    font-style: normal;
+    font-weight: 400;
+    src: url('./fonts/alegreya-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Alegreya';
+    font-style: italic;
+    font-weight: 400;
+    src: url('./fonts/alegreya-latin-400-italic.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Alegreya';
+    font-style: normal;
+    font-weight: 700;
+    src: url('./fonts/alegreya-latin-700-normal.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Alegreya';
+    font-style: italic;
+    font-weight: 700;
+    src: url('./fonts/alegreya-latin-700-italic.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 400;
+    src: url('./fonts/jetbrains-mono-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 300;
+    src: url('./fonts/inter-latin-300-normal.woff2') format('woff2');
+}
+
+/* Light values first; the dark halves are spot-web's own dark palette
+   (secondary #9C9289, link-blue #84B0E6, rule #2E3236, edge #6B7278). */
+:root {
+    --smd-secondary: #655A52;
+    --smd-rule: #DDD;
+    --smd-answer-border: #C6C1BC;
+    --smd-answer-label: #B3ACA5;
+    --smd-answer-ink: #2F65A7;
+}
+
+.vscode-dark,
+.vscode-high-contrast:not(.vscode-high-contrast-light) {
+    --smd-secondary: #9C9289;
+    --smd-rule: #2E3236;
+    --smd-answer-border: #565D63;
+    --smd-answer-label: #6B7278;
+    --smd-answer-ink: #84B0E6;
+}
+
+body {
+    font-family: 'Alegreya', Georgia, serif;
+}
+
+code, pre, kbd, samp {
+    font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, Menlo, monospace;
+}
+
+h2 {
+    margin-top: 1.5em;
+}
+
+blockquote {
+    border-left: 3px solid var(--smd-rule);
+    color: var(--smd-secondary);
+}
+
+hr {
+    border: none;
+    border-top: 1px solid var(--smd-rule);
+}
+
+/* The `::: answer` boxes, matching src/style.css. */
+.answer-box {
+    position: relative;
+    border: 1px solid var(--smd-answer-border);
+    border-radius: 3px;
+    min-height: 1.4in;
+    margin: 0.9em 0 1.1em;
+    padding: 0.6em 0.75em 1.5em;
+}
+
+.answer-box::after {
+    content: "answer";
+    position: absolute;
+    right: 0.6em;
+    bottom: 0.35em;
+    color: var(--smd-answer-label);
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    font-size: 0.75em;
+    line-height: 1;
+}
+
+.answer-box .answer-content {
+    color: var(--smd-answer-ink);
+}
+
+.answer-content > :first-child { margin-top: 0; }
+.answer-content > :last-child { margin-bottom: 0; }

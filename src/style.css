@@ -1,0 +1,163 @@
+/* Print stylesheet mirroring the spot-web palette and typography:
+   Alegreya serif, near-black text, warm-grey secondary text, U-M blue
+   links, hairline rules, 3px radii. Print is always light. */
+:root {
+    --text-color: #131516;
+    --secondary-text-color: #655A52;
+    --link-color: #2F65A7;
+    --code-background-color: #F7F7F7;
+    --rule-color: #DDD;
+
+    --answer-border-color: #C6C1BC;
+    --answer-label-color: #B3ACA5;
+    --answer-ink-color: #2F65A7;
+}
+
+html {
+    font-size: 11.5pt;
+}
+
+body {
+    background: #FFF;
+    color: var(--text-color);
+    font-family: 'Alegreya', Georgia, serif;
+    line-height: 1.5;
+    margin: 0;
+}
+
+p {
+    orphans: 2;
+    widows: 2;
+}
+
+a {
+    color: var(--link-color);
+    text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    line-height: 1.25;
+    break-after: avoid;
+}
+
+h1 { font-size: 1.7rem; }
+h2 { font-size: 1.35rem; margin-top: 1.5em; }
+h3 { font-size: 1.15rem; }
+h4 { font-size: 1rem; }
+
+/* Title block built from YAML frontmatter (title / subtitle / author /
+   date). The meta line joins its parts with the same " · " separator the
+   site uses, and the hairline matches its .site-footer-line. */
+.doc-header {
+    border-bottom: 1px solid var(--rule-color);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+}
+
+.doc-header .doc-title {
+    margin: 0;
+    font-size: 1.9rem;
+}
+
+.doc-header .doc-meta {
+    color: var(--secondary-text-color);
+    margin: 0.25rem 0 0;
+}
+
+code, pre, kbd, samp {
+    font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, Menlo, monospace;
+    font-size: 0.82em;
+}
+
+pre {
+    background: var(--code-background-color);
+    border-radius: 3px;
+    padding: 0.75rem;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    break-inside: avoid;
+}
+
+pre code {
+    font-size: 1em;
+    padding: 0;
+    background: none;
+}
+
+code {
+    background: var(--code-background-color);
+    border-radius: 3px;
+    padding: 0.08em 0.3em;
+}
+
+blockquote {
+    border-left: 3px solid var(--rule-color);
+    color: var(--secondary-text-color);
+    margin: 1em 0;
+    padding: 0 0 0 1em;
+    break-inside: avoid;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid var(--rule-color);
+    margin: 2em 0;
+}
+
+img {
+    max-width: 100%;
+}
+
+table {
+    border-collapse: collapse;
+    margin: 1em 0;
+    break-inside: avoid;
+}
+
+th, td {
+    border-bottom: 1px solid var(--rule-color);
+    padding: 0.35em 0.75em;
+    text-align: left;
+}
+
+th {
+    border-bottom: 2px solid var(--secondary-text-color);
+}
+
+/* --- Answer boxes -------------------------------------------------------
+   `::: answer` blocks: a faint grey outline with a faint "answer" label in
+   the bottom-right corner. Content inside the fence is hidden on the
+   worksheet; `--key` adds .answer-key to <body>, which reveals it in an
+   ink blue so the key reads as filled in rather than typeset. */
+.answer-box {
+    position: relative;
+    border: 1px solid var(--answer-border-color);
+    border-radius: 3px;
+    min-height: 1.4in;
+    margin: 0.9em 0 1.1em;
+    padding: 0.6em 0.75em 1.5em;
+    break-inside: avoid;
+}
+
+.answer-box::after {
+    content: "answer";
+    position: absolute;
+    right: 0.6em;
+    bottom: 0.35em;
+    color: var(--answer-label-color);
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    font-size: 0.75rem;
+    line-height: 1;
+}
+
+body:not(.answer-key) .answer-content {
+    display: none;
+}
+
+.answer-key .answer-content {
+    color: var(--answer-ink-color);
+}
+
+.answer-content > :first-child { margin-top: 0; }
+.answer-content > :last-child { margin-bottom: 0; }

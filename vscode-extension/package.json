@@ -1,0 +1,18 @@
+{
+    "name": "spot-markdown-preview",
+    "displayName": "Spot Markdown Preview",
+    "description": "spot-web styling and ::: answer boxes in the built-in markdown preview",
+    "version": "0.1.0",
+    "publisher": "local",
+    "engines": {
+        "vscode": "^1.70.0"
+    },
+    "main": "./extension.js",
+    "activationEvents": [],
+    "contributes": {
+        "markdown.markdownItPlugins": true,
+        "markdown.previewStyles": [
+            "./preview.css"
+        ]
+    }
+}

@@ -1,0 +1,6 @@
+node_modules/
+*.pdf
+.md2pdf-*.html
+examples/*.html
+vscode-extension/fonts/
+vscode-extension/node_modules/
