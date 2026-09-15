@@ -3,7 +3,7 @@ import { pathToFileURL } from 'node:url';
 
 const FOOTER = `
 <div style="width:100%; text-align:center; font-family:Georgia,serif;
-            font-size:9px; color:#B3ACA5; padding-bottom:0.1in;">
+            font-size:9px; color:#000; padding-bottom:0.1in;">
   <span class="pageNumber"></span> / <span class="totalPages"></span>
 </div>`;
 
