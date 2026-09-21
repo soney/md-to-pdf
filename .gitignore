@@ -4,3 +4,4 @@ node_modules/
 examples/*.html
 vscode-extension/fonts/
 vscode-extension/node_modules/
+vscode-extension/worksheet.cjs

@@ -1,6 +1,6 @@
 {
   "name": "@soney/md-to-pdf",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Convert Markdown worksheets to styled PDFs with answer boxes",
   "scripts": {
     "example": "node src/cli.js examples/worksheet.md && node src/cli.js examples/worksheet.md --key",

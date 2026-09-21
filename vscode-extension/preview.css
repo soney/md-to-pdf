@@ -115,3 +115,31 @@ hr {
 
 .answer-content > :first-child { margin-top: 0; }
 .answer-content > :last-child { margin-bottom: 0; }
+
+/* Worksheet structure, matching src/style.css. */
+.question { break-inside: avoid; }
+
+.choices ul, .choices ol { list-style: none; counter-reset: choice; margin: 0.35em 0 0.6em; padding: 0; }
+.choices li { counter-increment: choice; margin: 0.15em 0; padding-left: 1.7em; text-indent: -1.7em; }
+.choices li::before { content: counter(choice, upper-alpha) "."; display: inline-block; width: 1.7em; font-weight: 700; text-indent: 0; }
+.choices-lower li::before { content: counter(choice, lower-alpha) "."; }
+.choices li > p { display: inline; margin: 0; }
+.choices-inline li { display: inline; margin: 0 1.4em 0 0; padding-left: 0; text-indent: 0; }
+.choices-inline li::before { width: auto; margin-right: 0.35em; }
+
+/* The preview always shows the key, so the correct choice is circled. */
+.choice-correct::before {
+    content: counter(choice, upper-alpha);
+    box-sizing: border-box;
+    width: 1.35em; height: 1.35em; margin-right: 0.35em;
+    border: 1.5px solid var(--smd-answer-ink); border-radius: 50%;
+    color: var(--smd-answer-ink); line-height: 1.2em; text-align: center;
+}
+.choices-lower .choice-correct::before { content: counter(choice, lower-alpha); }
+
+.worksheet-error { border: 2px solid #C00; color: #C00; padding: 0.3em 0.6em; }
+
+.answer-note { color: var(--smd-answer-ink); font-size: 0.9em; margin: 0.2em 0 0.7em; }
+
+.columns { display: grid; grid-template-columns: repeat(var(--columns, 2), 1fr); column-gap: 0.3in; }
+.page-break { border-top: 1px dashed var(--smd-rule); margin: 1em 0; }

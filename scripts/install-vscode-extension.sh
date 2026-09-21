@@ -18,6 +18,7 @@ cp node_modules/@fontsource/alegreya/files/alegreya-latin-400-normal.woff2 \
 
 rm -rf "$ext/node_modules/markdown-it-container"
 cp -r node_modules/markdown-it-container "$ext/node_modules/"
+cp src/worksheet.cjs "$ext/worksheet.cjs"
 
 installed=0
 for dir in "$HOME/.vscode/extensions" "$HOME/.vscode-server/extensions" \

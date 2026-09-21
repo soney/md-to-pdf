@@ -161,3 +161,153 @@ body:not(.answer-key) .answer-content {
 
 .answer-content > :first-child { margin-top: 0; }
 .answer-content > :last-child { margin-bottom: 0; }
+
+/* --- Questions ----------------------------------------------------------
+   A paragraph opening with a bold number ("**1.**", "**7a.**") starts a
+   .question that runs to the next stem, heading, rule or page break, so a
+   stem is never orphaned from its code, choices or answer box. */
+.question {
+    break-inside: avoid;
+}
+
+/* --- Choices ------------------------------------------------------------
+   `::: choices` wraps a Markdown list; CSS counters letter the items so the
+   source never carries "**A.**" by hand (and never trips the typographer's
+   "(c)" → "©"). `inline` runs the options along one line, `lower` letters
+   them a. b. c., and `key=B` circles B when the key is printed. */
+.choices ul,
+.choices ol {
+    list-style: none;
+    counter-reset: choice;
+    margin: 0.35em 0 0.6em;
+    padding: 0;
+}
+
+.choices li {
+    counter-increment: choice;
+    margin: 0.15em 0;
+    padding-left: 1.7em;
+    text-indent: -1.7em;
+}
+
+.choices li::before {
+    content: counter(choice, upper-alpha) ".";
+    display: inline-block;
+    width: 1.7em;
+    font-weight: 700;
+    text-indent: 0;
+}
+
+.choices-lower li::before {
+    content: counter(choice, lower-alpha) ".";
+}
+
+.choices li > p {
+    display: inline;
+    margin: 0;
+}
+
+.choices-inline li {
+    display: inline;
+    margin: 0 1.4em 0 0;
+    padding-left: 0;
+    text-indent: 0;
+}
+
+.choices-inline li::before {
+    width: auto;
+    margin-right: 0.35em;
+}
+
+.answer-key .choice-correct::before {
+    content: counter(choice, upper-alpha);
+    box-sizing: border-box;
+    width: 1.35em;
+    height: 1.35em;
+    margin-right: 0.35em;
+    border: 1.5px solid var(--answer-ink-color);
+    border-radius: 50%;
+    color: var(--answer-ink-color);
+    line-height: 1.2em;
+    text-align: center;
+}
+
+.answer-key .choices-lower .choice-correct::before {
+    content: counter(choice, lower-alpha);
+}
+
+.worksheet-error {
+    border: 2px solid #C00;
+    color: #C00;
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    padding: 0.3em 0.6em;
+}
+
+/* --- Unboxed answers ----------------------------------------------------
+   `::: answer none`: nothing on the worksheet, the contents in the key.
+   The place for a multiple-choice explanation or a grading note. */
+body:not(.answer-key) .answer-note {
+    display: none;
+}
+
+.answer-key .answer-note {
+    color: var(--answer-ink-color);
+    font-size: 0.9em;
+    margin: 0.2em 0 0.7em;
+}
+
+/* --- Layout -------------------------------------------------------------- */
+.columns {
+    display: grid;
+    grid-template-columns: repeat(var(--columns, 2), 1fr);
+    column-gap: 0.3in;
+}
+
+.page-break {
+    break-before: page;
+    page-break-before: always;
+}
+
+/* --- Frontmatter switches ------------------------------------------------
+   `palette: bw` prints text, rules, boxes and the key's ink in black, for
+   photocopied handouts. `density: compact` tightens the spacing that a
+   two-page worksheet runs out of first. */
+.palette-bw {
+    --text-color: #000;
+    --secondary-text-color: #000;
+    --link-color: #000;
+    --code-background-color: #FFF;
+    --rule-color: #000;
+    --answer-border-color: #000;
+    --answer-label-color: #000;
+    --answer-ink-color: #000;
+}
+
+.compact .doc-header {
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.5rem;
+}
+
+.compact h2 {
+    margin-top: 0.7em;
+    margin-bottom: 0.35em;
+}
+
+.compact p {
+    margin: 0.3em 0;
+}
+
+.compact pre {
+    margin: 0.3em 0;
+    padding: 0.25em 0.65em;
+}
+
+.compact .question p {
+    margin: 0.25em 0;
+}
+
+.compact .answer-box {
+    box-sizing: border-box;
+    margin: 0.06in 0 0.12in;
+    padding: 0.07in 0.12in 0.15in;
+}

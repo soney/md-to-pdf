@@ -3,10 +3,10 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import MarkdownIt from 'markdown-it';
-import container from 'markdown-it-container';
 import matter from 'gray-matter';
 import hljs from 'highlight.js';
 import katex from '@vscode/markdown-it-katex';
+import worksheet from './worksheet.cjs';
 
 const require = createRequire(import.meta.url);
 const srcDir = path.dirname(fileURLToPath(import.meta.url));
@@ -27,25 +27,7 @@ const STYLESHEETS = [
     'katex/dist/katex.min.css',
 ].map((id) => pathToFileURL(require.resolve(id)).href);
 
-/* `::: answer` fences. The rest of the info string may give a height:
-   a CSS length ("2in", "6cm") or a bare number meaning that many blank
-   lines. Anything between the fences is the answer, shown only in key
-   mode. */
-const HEIGHT_LENGTH = /^\d+(\.\d+)?(in|cm|mm|pt|px|em|rem)$/;
-const HEIGHT_LINES = /^\d+$/;
-
-function answerOpenTag(info) {
-    const arg = info.trim().replace(/^answer\s*/, '');
-    let style = '';
-    if (HEIGHT_LENGTH.test(arg)) {
-        style = ` style="min-height:${arg}"`;
-    } else if (HEIGHT_LINES.test(arg)) {
-        style = ` style="min-height:${Number(arg) * 1.6}em"`;
-    }
-    return `<div class="answer-box"${style}><div class="answer-content">\n`;
-}
-
-function makeMarkdownIt() {
+function makeMarkdownIt({ groupQuestions }) {
     const md = new MarkdownIt({
         html: true,
         linkify: true,
@@ -58,11 +40,7 @@ function makeMarkdownIt() {
         },
     });
     md.use(katex.default ?? katex);
-    md.use(container, 'answer', {
-        validate: (params) => /^answer(\s|$)/.test(params.trim()) || params.trim() === 'answer',
-        render: (tokens, idx) =>
-            tokens[idx].nesting === 1 ? answerOpenTag(tokens[idx].info) : '</div></div>\n',
-    });
+    md.use(worksheet, { groupQuestions });
     return md;
 }
 
@@ -83,14 +61,33 @@ function headerBlock(data) {
     ].filter(Boolean).join('\n');
 }
 
+const PALETTES = new Set(['bw']);
+const DENSITIES = new Set(['compact']);
+
+/* Frontmatter keys the worksheet syntax reads, over and above the title
+   block: `palette: bw`, `density: compact`, `group_questions: false`. A CLI
+   flag (--bw) wins over the file. */
+function bodyClasses(data, { key, palette }) {
+    const classes = [];
+    if (key) classes.push('answer-key');
+    const wanted = palette ?? data.palette;
+    if (wanted && !PALETTES.has(String(wanted))) throw new Error(`unknown palette "${wanted}" (try: bw)`);
+    if (wanted) classes.push(`palette-${wanted}`);
+    if (data.density && !DENSITIES.has(String(data.density))) {
+        throw new Error(`unknown density "${data.density}" (try: compact)`);
+    }
+    if (data.density) classes.push(String(data.density));
+    return classes.join(' ');
+}
+
 /**
  * Render a markdown string to a complete HTML document.
  * @param {string} source raw markdown (may start with YAML frontmatter)
- * @param {{key?: boolean, fallbackTitle?: string}} options
+ * @param {{key?: boolean, palette?: string, fallbackTitle?: string}} options
  */
-export function renderHtml(source, { key = false, fallbackTitle = 'Document' } = {}) {
+export function renderHtml(source, { key = false, palette, fallbackTitle = 'Document' } = {}) {
     const { data, content } = matter(source);
-    const md = makeMarkdownIt();
+    const md = makeMarkdownIt({ groupQuestions: data.group_questions !== false });
     const body = md.render(content);
     const title = data.title ? String(data.title) : fallbackTitle;
     const links = STYLESHEETS.map((href) => `<link rel="stylesheet" href="${href}">`).join('\n');
@@ -106,7 +103,7 @@ ${links}
 ${style}
 </style>
 </head>
-<body class="${key ? 'answer-key' : ''}">
+<body class="${bodyClasses(data, { key, palette })}">
 ${headerBlock(data)}
 ${body}
 </body>

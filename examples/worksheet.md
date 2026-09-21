@@ -55,5 +55,47 @@ $T(n) = O(\log n)$ — each step halves the input, so after $k$ steps we have
 $n/2^k = 1$, giving $k = \log_2 n$.
 :::
 
+## Multiple choice
+
+**Q5.** After `const xs = [1, 2, 3]; xs.push(4);`, what is `xs.length`?
+
+::: choices inline key=C
+- `3`
+- `[1, 2, 3, 4]`
+- `4`
+- It raises, because `const` arrays cannot change.
+:::
+
+::: answer none
+**C.** `push` appends in place. A is the length before the push; B is the array
+itself, not its length; D confuses rebinding (which `const` forbids) with
+mutation (which it allows).
+:::
+
+**Q6.** Which of these is a *block* element by default?
+
+::: choices lower key=b
+- `<span>`
+- `<div>`
+- `<a>`
+- `<code>`
+:::
+
+:::: columns
+
+**Q7.** `typeof null`
+
+::: answer 0.5in
+`"object"`
+:::
+
+**Q8.** `typeof []`
+
+::: answer 0.5in
+`"object"`
+:::
+
+::::
+
 > Reminder: exam 1 covers everything through this worksheet. See the
 > [course site](https://soney.github.io) for practice materials.

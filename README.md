@@ -17,7 +17,8 @@ Or link it once (`npm link`) and use `md2pdf` anywhere.
 | Option | Effect |
 | --- | --- |
 | `-o, --output <file>` | Output path (default `<input>.pdf`, `<input>-key.pdf` with `--key`) |
-| `--key` | Show `::: answer` contents, in ink blue |
+| `--key` | Show `::: answer` contents, in ink blue, and circle each `key=` choice |
+| `--bw` | Black-and-white palette (same as `palette: bw` in the frontmatter) |
 | `--html` | Keep the intermediate HTML next to the PDF |
 | `-w, --watch` | Rebuild the PDF whenever the input file changes |
 | `--format <size>` | `letter` (default) or `a4` |
@@ -42,10 +43,73 @@ Hidden until --key.
 :::
 ```
 
+## Questions
+
+A paragraph that opens with a bold number (`**1.**`, `**7a.**`, `**Q3.**`)
+starts a question. Everything up to the next such paragraph, heading,
+horizontal rule or page break is kept on one page with it, so a stem is
+never orphaned from its code block, options or answer box. Set
+`group_questions: false` in the frontmatter to turn this off, or wrap a stem
+the rule does not recognise in `::: question` ... `:::`.
+
+## Multiple choice
+
+`::: choices` wraps a Markdown list and letters it A. B. C. for you:
+
+```markdown
+**3.** What is the value of `"100" + "406"`?
+
+::: choices inline key=C
+- `506`
+- `"506"`
+- `"100406"`
+- Python raises an error.
+:::
+
+::: answer none
+**C.** Both operands are strings, so `+` joins them.
+:::
+```
+
+| Option | Effect |
+| --- | --- |
+| `inline` | Options run along one line instead of one per line |
+| `lower` | Letter a. b. c. instead of A. B. C. |
+| `key=C` | Circle C when rendering with `--key`; nothing shows otherwise |
+
+`::: answer none` draws no box on the worksheet and prints its contents,
+unboxed and inked, in the key. That is where a multiple-choice explanation
+or a grading note goes. An unknown option renders a red error box rather
+than failing silently.
+
+## Layout
+
+`:::: columns` lays its questions out side by side (`:::: columns 3` for
+three). Because it contains other fenced blocks, its own fence is one
+colon longer:
+
+```markdown
+:::: columns
+
+**8.** `d["name"]`
+
+::: answer 0.5in
+:::
+
+**9.** `d["year"]`
+
+::: answer 0.5in
+:::
+
+::::
+```
+
+`\newpage` on a line by itself forces a page break.
+
 ## Frontmatter
 
 YAML frontmatter builds the title block; `subtitle`, `author`, and `date`
-are joined with " · " under the title:
+are joined with " · " under the title. Three more keys switch rendering:
 
 ```markdown
 ---
@@ -53,6 +117,9 @@ title: "Event-Driven Programming: Practice"
 subtitle: SI 379
 author: Steve Oney
 date: September 1, 2026
+palette: bw          # black text, rules, boxes and key ink, for photocopies
+density: compact     # tighter spacing around headings, code and boxes
+group_questions: false   # do not auto-wrap bold-numbered stems
 ---
 ```
 
@@ -66,7 +133,9 @@ then reload VS Code windows ("Developer: Reload Window"). This links a
 small local extension ([vscode-extension/](vscode-extension/)) into your
 VS Code extensions folder(s). It hooks the **built-in** markdown preview
 (`Ctrl+Shift+V` / `Ctrl+K V`), so worksheets render live as you type with
-the same Alegreya styling and outlined answer boxes as the PDF. Unlike the
+the same Alegreya styling, answer boxes, lettered choices and columns as
+the PDF; the plugin is one file, `src/worksheet.cjs`, that the install
+script copies in, so re-run it after updating. Unlike the
 worksheet PDF, the preview always shows answer contents (inked blue),
 since that's what you're writing. Math previews too — VS Code's built-in
 KaTeX support uses the same `$...$` syntax.

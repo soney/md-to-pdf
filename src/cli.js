@@ -14,6 +14,7 @@ Options:
   -o, --output <file>   Output PDF path (default: <input>.pdf, or
                         <input>-key.pdf with --key)
       --key             Answer-key mode: show ::: answer contents in ink blue
+      --bw              Black-and-white palette (same as frontmatter palette: bw)
       --html            Also keep the intermediate HTML next to the PDF
   -w, --watch           Rebuild the PDF whenever the input file changes
       --format <size>   Page size: letter (default) or a4
@@ -21,12 +22,20 @@ Options:
       --no-page-numbers Omit the page-number footer
   -h, --help            Show this help
 
-Answer box syntax:
-  ::: answer            default height (1.4in)
+Worksheet syntax (see README.md):
+  **1.** A stem         a bold number opens a question that will not split
+                        across pages; it runs to the next stem or heading
+  ::: choices inline key=B
+  - an option           a Markdown list, lettered A. B. C. automatically;
+  :::                   inline = one line, lower = a. b. c., key=B = circled in key
+  ::: answer            an answer box: default height (1.4in)
   ::: answer 2in        explicit height (any CSS length)
   ::: answer 4          height of ~4 blank lines
+  ::: answer none       no box; contents appear in the key only
   The answer goes here; it only appears with --key.
   :::
+  :::: columns          side-by-side questions (outer fence is one colon longer)
+  \newpage              a page break
 `;
 
 function fail(message) {
@@ -41,6 +50,7 @@ try {
         options: {
             output: { type: 'string', short: 'o' },
             key: { type: 'boolean', default: false },
+            bw: { type: 'boolean', default: false },
             html: { type: 'boolean', default: false },
             watch: { type: 'boolean', short: 'w', default: false },
             format: { type: 'string', default: 'letter' },
@@ -82,6 +92,7 @@ async function build(printer) {
     const source = fs.readFileSync(input, 'utf8');
     const html = renderHtml(source, {
         key: args.values.key,
+        palette: args.values.bw ? 'bw' : undefined,
         fallbackTitle: path.basename(input, path.extname(input)),
     });
     fs.writeFileSync(htmlPath, html);
